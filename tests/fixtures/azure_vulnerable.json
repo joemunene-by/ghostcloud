@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "azure": [
+    {
+      "service": "storage",
+      "type": "storage_account",
+      "id": "/subscriptions/abc/resourceGroups/rg1/providers/Microsoft.Storage/storageAccounts/pubstg",
+      "region": "eastus",
+      "config": { "allow_blob_public_access": true }
+    },
+    {
+      "service": "network",
+      "type": "network_security_group",
+      "id": "/subscriptions/abc/resourceGroups/rg1/providers/Microsoft.Network/networkSecurityGroups/nsg1",
+      "region": "eastus",
+      "config": {
+        "security_rules": [
+          {
+            "direction": "Inbound",
+            "access": "Allow",
+            "source_address_prefix": "Internet",
+            "destination_port_range": "3389"
+          },
+          {
+            "direction": "Inbound",
+            "access": "Allow",
+            "source_address_prefix": "*",
+            "destination_port_ranges": ["22", "8080"]
+          }
+        ]
+      }
+    },
+    {
+      "service": "compute",
+      "type": "disk",
+      "id": "/subscriptions/abc/resourceGroups/rg1/providers/Microsoft.Compute/disks/disk1",
+      "region": "eastus",
+      "config": { "encryption": { "enabled": false } }
+    }
+  ]
+}

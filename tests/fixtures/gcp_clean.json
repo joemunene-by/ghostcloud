@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "gcp": [
+    {
+      "service": "storage",
+      "type": "bucket",
+      "id": "//storage.googleapis.com/private-assets",
+      "region": "us",
+      "config": {
+        "public_access_prevention": "enforced",
+        "iam_bindings": [
+          {
+            "role": "roles/storage.objectViewer",
+            "members": ["serviceAccount:deploy@demo.iam.gserviceaccount.com"]
+          }
+        ]
+      }
+    },
+    {
+      "service": "compute",
+      "type": "firewall",
+      "id": "projects/demo/global/firewalls/allow-internal",
+      "region": "global",
+      "config": {
+        "direction": "INGRESS",
+        "source_ranges": ["10.128.0.0/9"],
+        "allowed": [{ "protocol": "tcp", "ports": ["22"] }]
+      }
+    },
+    {
+      "service": "iam",
+      "type": "service_account",
+      "id": "scoped@demo.iam.gserviceaccount.com",
+      "region": "",
+      "config": { "roles": ["roles/storage.objectViewer"] }
+    },
+    {
+      "service": "compute",
+      "type": "instance",
+      "id": "projects/demo/zones/us-central1-a/instances/bastion-1",
+      "region": "us-central1-a",
+      "config": { "has_external_ip": false, "ssh_open_to_internet": false }
+    }
+  ]
+}

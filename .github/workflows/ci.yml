@@ -1,0 +1,44 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: Lint
+        run: ruff check .
+
+      - name: Test
+        run: pytest
+
+      - name: Smoke (checks)
+        run: ghostcloud checks --provider all
+
+      - name: Smoke (scan example, gate on critical)
+        # Demonstrates CI gating end to end. The bundled example contains
+        # critical findings, so a non-zero exit here is the expected, correct
+        # behavior; continue-on-error keeps it informational rather than a gate
+        # on this repo's own CI.
+        continue-on-error: true
+        run: ghostcloud scan --input examples/all_providers.json --provider all --fail-on critical

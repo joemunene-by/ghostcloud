@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "aws": [
+    {
+      "service": "s3",
+      "type": "bucket",
+      "id": "arn:aws:s3:::private-data-bucket",
+      "region": "us-east-1",
+      "config": {
+        "acl": "private",
+        "public_access_block": {
+          "block_public_acls": true,
+          "block_public_policy": true,
+          "ignore_public_acls": true,
+          "restrict_public_buckets": true
+        },
+        "encryption": { "enabled": true, "type": "aws:kms" },
+        "versioning": { "status": "Enabled" }
+      }
+    },
+    {
+      "service": "ec2",
+      "type": "security_group",
+      "id": "sg-cleansg01",
+      "region": "us-east-1",
+      "config": {
+        "ingress_rules": [
+          { "from_port": 22, "to_port": 22, "cidrs": ["10.0.0.0/16"] },
+          { "from_port": 443, "to_port": 443, "cidrs": ["0.0.0.0/0"] }
+        ]
+      }
+    },
+    {
+      "service": "ec2",
+      "type": "volume",
+      "id": "vol-clean01",
+      "region": "us-east-1",
+      "config": { "encrypted": true }
+    },
+    {
+      "service": "iam",
+      "type": "user",
+      "id": "arn:aws:iam::111122223333:user/bob",
+      "region": "",
+      "config": { "console_access": true, "mfa_enabled": true }
+    },
+    {
+      "service": "iam",
+      "type": "policy",
+      "id": "arn:aws:iam::111122223333:policy/ReadOnlyS3",
+      "region": "",
+      "config": {
+        "statements": [
+          {
+            "effect": "Allow",
+            "action": ["s3:GetObject"],
+            "resource": ["arn:aws:s3:::private-data-bucket/*"]
+          }
+        ]
+      }
+    },
+    {
+      "service": "rds",
+      "type": "db_instance",
+      "id": "arn:aws:rds:us-east-1:111122223333:db:secure-db",
+      "region": "us-east-1",
+      "config": { "publicly_accessible": false, "storage_encrypted": true }
+    },
+    {
+      "service": "cloudtrail",
+      "type": "trail",
+      "id": "arn:aws:cloudtrail:us-east-1:111122223333:trail/org-trail",
+      "region": "us-east-1",
+      "config": { "is_logging": true, "is_multi_region": true }
+    }
+  ]
+}

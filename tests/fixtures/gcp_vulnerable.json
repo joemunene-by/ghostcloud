@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "gcp": [
+    {
+      "service": "storage",
+      "type": "bucket",
+      "id": "//storage.googleapis.com/public-assets",
+      "region": "us",
+      "config": {
+        "public_access_prevention": "inherited",
+        "iam_bindings": [
+          { "role": "roles/storage.objectViewer", "members": ["allUsers"] }
+        ]
+      }
+    },
+    {
+      "service": "compute",
+      "type": "firewall",
+      "id": "projects/demo/global/firewalls/allow-ssh-all",
+      "region": "global",
+      "config": {
+        "direction": "INGRESS",
+        "source_ranges": ["0.0.0.0/0"],
+        "allowed": [{ "protocol": "tcp", "ports": ["22", "3389"] }]
+      }
+    },
+    {
+      "service": "iam",
+      "type": "service_account",
+      "id": "deploy@demo.iam.gserviceaccount.com",
+      "region": "",
+      "config": { "roles": ["roles/owner"] }
+    },
+    {
+      "service": "compute",
+      "type": "instance",
+      "id": "projects/demo/zones/us-central1-a/instances/web-1",
+      "region": "us-central1-a",
+      "config": { "has_external_ip": true, "ssh_open_to_internet": true }
+    }
+  ]
+}
