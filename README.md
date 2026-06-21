@@ -1,4 +1,8 @@
-# ghostcloud
+<p align="center">
+  <img src="assets/logo.svg" width="120" height="120" alt="ghostcloud logo">
+</p>
+
+<h1 align="center">ghostcloud</h1>
 
 Multi-cloud security posture management (CSPM) and misconfiguration scanner for
 AWS, GCP, and Azure. ghostcloud evaluates cloud resource configurations against
